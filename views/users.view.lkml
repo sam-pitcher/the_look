@@ -8,6 +8,10 @@ view: users {
     sql: ${TABLE}.id ;;
   }
 
+  dimension: dummy {
+    sql: 'dummy' ;;
+  }
+
   dimension: age {
     type: number
     sql: ${TABLE}.age ;;
