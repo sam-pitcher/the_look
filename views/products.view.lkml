@@ -13,6 +13,12 @@ view: products {
     sql: ${TABLE}.brand ;;
   }
 
+  dimension: brand_logo {
+    type: string
+    sql: LOWER(REPLACE(REPLACE(${brand}, " ", ""),"'","")) ;;
+    html: <img src="https://www.google.com/s2/favicons?domain={{value}}.com"> ;;
+  }
+
   dimension: category {
     type: string
     sql: ${TABLE}.category ;;
