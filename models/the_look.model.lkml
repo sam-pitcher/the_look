@@ -62,6 +62,16 @@ explore: orders {
   }
 }
 
+explore: order_items_with_access_filter {
+  extends: [order_items]
+  from: order_items
+  view_name: order_items
+  access_filter: {
+    user_attribute: brand
+    field: products.brand
+  }
+}
+
 explore: pending_orders {
   join: users {
     type: left_outer
