@@ -5,25 +5,15 @@ include: "/views/**/*.view"
 
 datagroup: the_look_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
-  max_cache_age: "1 hour"
+  max_cache_age: "4 hours"
 }
 
 persist_with: the_look_default_datagroup
-
-explore: calendar_table {}
 
 explore: events {
   join: users {
     type: left_outer
     sql_on: ${events.user_id} = ${users.id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: inventory_items {
-  join: products {
-    type: left_outer
-    sql_on: ${inventory_items.product_id} = ${products.id} ;;
     relationship: many_to_one
   }
 }
