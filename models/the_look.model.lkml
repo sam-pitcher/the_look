@@ -10,8 +10,6 @@ datagroup: the_look_default_datagroup {
 
 persist_with: the_look_default_datagroup
 
-explore: calendar_table {}
-
 explore: events {
   join: users {
     type: left_outer
@@ -19,27 +17,6 @@ explore: events {
     relationship: many_to_one
   }
 }
-
-explore: inventory_items {
-  join: products {
-    type: left_outer
-    sql_on: ${inventory_items.product_id} = ${products.id} ;;
-    relationship: many_to_one
-  }
-}
-
-# explore: period_over_period {
-#   extends: [order_items, order_items_period]
-#   from: order_items
-# }
-#
-# explore: order_items_period {
-#   extends: [order_items]
-#   from: order_items
-#   join: orders {
-#     view_label: "Orders Period"
-#   }
-# }
 
 explore: order_items {
   join: orders {
@@ -72,51 +49,3 @@ explore: order_items {
     relationship: many_to_one
   }
 }
-
-# explore: orders {
-#   join: users {
-#     type: left_outer
-#     sql_on: ${orders.user_id} = ${users.id} ;;
-#     relationship: many_to_one
-#   }
-# }
-
-# explore: pending_orders {
-#   join: users {
-#     type: left_outer
-#     sql_on: ${pending_orders.user_id} = ${users.id} ;;
-#     relationship: many_to_one
-#   }
-# }
-#
-# explore: products {}
-#
-# explore: user_data {
-#   join: users {
-#     type: left_outer
-#     sql_on: ${user_data.user_id} = ${users.id} ;;
-#     relationship: many_to_one
-#   }
-# }
-
-# explore: orders {
-#   join: users {
-#     sql_where: ${users.dummy} = 'dummy' ;;
-#
-#     type: left_outer
-#     sql_on: ${users.id} = ${orders.user_id} ;;
-#   }
-#   join: order_items {
-#     type: left_outer
-#     sql_on: ${order_items.order_id} = ${orders.id} ;;
-#   }
-#   join: inventory_items {
-#     type: left_outer
-#     sql_on:
-#     {% if users.dummy._is_filtered %} ${order_items.inventory_item_id} = ${inventory_items.id}
-#     {% else %} 1=1
-#     {% endif %}  ;;
-#     relationship: many_to_one
-# #     IF USERS IS IN THE QUERY THEN DO PROPER JOIN, ELSE DO 1=1
-#   }
-# }
