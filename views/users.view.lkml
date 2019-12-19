@@ -1,5 +1,5 @@
 view: users {
-  sql_table_name: demo_db.users ;;
+  sql_table_name: demo_db2.users ;;
   drill_fields: [id]
 
 

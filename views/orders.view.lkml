@@ -1,5 +1,5 @@
 view: orders {
-  sql_table_name: demo_db.orders ;;
+  sql_table_name: demo_db2.orders ;;
   drill_fields: [id]
 
   dimension: id {

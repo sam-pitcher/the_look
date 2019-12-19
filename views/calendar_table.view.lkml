@@ -1,5 +1,5 @@
 view: calendar_table {
-  sql_table_name: demo_db.calendar_table ;;
+  sql_table_name: demo_db2.calendar_table ;;
 
   dimension: d {
     type: yesno
