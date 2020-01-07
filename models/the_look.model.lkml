@@ -10,10 +10,19 @@ datagroup: the_look_default_datagroup {
 
 persist_with: the_look_default_datagroup
 
-explore: events {
-  join: users {
+access_grant: groups_that_have_access {
+  allowed_values: ["finance"]
+  user_attribute: team
+}
+
+##############################
+##         EXPLORES         ##
+##############################
+
+explore: users {
+  join: user_data {
     type: left_outer
-    sql_on: ${events.user_id} = ${users.id} ;;
+    sql_on: ${user_data.user_id} = ${users.id} ;;
     relationship: many_to_one
   }
 }
@@ -44,13 +53,44 @@ explore: order_items {
   }
 }
 
+#############################
+##         EXTENDS         ##
+#############################
+
 explore: orders {
+  view_name: orders
   join: users {
     type: left_outer
     sql_on: ${orders.user_id} = ${users.id} ;;
     relationship: many_to_one
   }
 }
+
+explore: orders_extended {
+  extends: [orders]
+
+  join: order_items {
+    type: left_outer
+    sql_on: ${order_items.order_id} = ${orders.id} ;;
+    relationship: many_to_one
+  }
+
+  join: inventory_items {
+    type: left_outer
+    sql_on: ${order_items.inventory_item_id} = ${inventory_items.id} ;;
+    relationship: many_to_one
+  }
+
+  join: products {
+    type: left_outer
+    sql_on: ${inventory_items.product_id} = ${products.id} ;;
+    relationship: many_to_one
+  }
+}
+
+###################################
+##         ACCESS FILTER         ##
+###################################
 
 explore: order_items_with_access_filter {
   extends: [order_items]
@@ -61,23 +101,3 @@ explore: order_items_with_access_filter {
     field: products.brand
   }
 }
-
-explore: pending_orders {
-  join: users {
-    type: left_outer
-    sql_on: ${pending_orders.user_id} = ${users.id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: products {}
-
-explore: user_data {
-  join: users {
-    type: left_outer
-    sql_on: ${user_data.user_id} = ${users.id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: users {}

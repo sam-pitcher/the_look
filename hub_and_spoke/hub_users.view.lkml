@@ -1,16 +1,10 @@
-view: users {
-  sql_table_name: demo_db2.users ;;
-  drill_fields: [id]
-
+view: hub_users {
+  extension: required
 
   dimension: id {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
-  }
-
-  dimension: dummy {
-    sql: 'dummy' ;;
   }
 
   dimension: age {
@@ -70,19 +64,6 @@ view: users {
 
   measure: count {
     type: count
-    drill_fields: [detail*]
   }
 
-  # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-      id,
-      first_name,
-      last_name,
-      events.count,
-      orders.count,
-      pending_orders.count,
-      user_data.count
-    ]
-  }
 }
