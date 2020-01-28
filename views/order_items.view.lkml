@@ -2,6 +2,19 @@ view: order_items {
   sql_table_name: demo_db2.order_items ;;
   drill_fields: [id]
 
+  parameter: sale_price_parameter {
+    type: unquoted
+    default_value: "sum"
+    allowed_value: {
+      label: "Sum"
+      value: "sum"
+    }
+    allowed_value: {
+      label: "Average"
+      value: "avg"
+    }
+  }
+
   dimension: id {
     primary_key: yes
     type: number
@@ -10,13 +23,13 @@ view: order_items {
 
   dimension: inventory_item_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.inventory_item_id ;;
   }
 
   dimension: order_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.order_id ;;
   }
 
@@ -51,8 +64,15 @@ view: order_items {
     value_format_name: usd
   }
 
+  measure: sale_price_with_function {
+    type: number
+    sql: {{ sale_price_parameter._parameter_value }}(${sale_price}) ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [id, orders.id, inventory_items.id]
   }
+
+
 }

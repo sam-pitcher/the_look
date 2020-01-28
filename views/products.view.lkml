@@ -2,15 +2,45 @@ view: products {
   sql_table_name: demo_db2.products ;;
   drill_fields: [id]
 
+  parameter: product_hierachy_parameter {
+    type: unquoted
+    default_value: "brand"
+    allowed_value: {
+      label: "Brand"
+      value: "brand"
+    }
+    allowed_value: {
+      label: "Category"
+      value: "category"
+    }
+    allowed_value: {
+      label: "Department"
+      value: "department"
+    }
+  }
+
   dimension: id {
     primary_key: yes
+    hidden: yes
     type: number
     sql: ${TABLE}.id ;;
+  }
+
+  dimension: product_hierachy {
+    type: string
+    sql:
+    {% if product_hierachy_parameter._parameter_value == 'brand' %}${brand}
+    {% elsif product_hierachy_parameter._parameter_value == 'category' %}${category}
+    {% else %}${department}
+    {% endif %}
+
+    ;;
   }
 
   dimension: brand {
     type: string
     sql: ${TABLE}.brand ;;
+    html: My brand is: {{value}} and it's cat is {{category._value}} ;;
   }
 
   dimension: brand_logo {
