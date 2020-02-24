@@ -103,3 +103,15 @@ explore: order_items_with_access_filter {
     field: products.brand
   }
 }
+
+###################################
+##         DATA TESTS         ##
+###################################
+test: order_data_exists {
+  explore_source: order_items {
+    column: count {}
+    }
+assert: count_greater_than_zero {
+  expression: ${order_items.count} > 0 ;;
+}
+}
