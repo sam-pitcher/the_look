@@ -45,4 +45,10 @@ view: orders {
     type: count
     drill_fields: [id, users.id, users.first_name, users.last_name, order_items.count]
   }
+
+
+  measure: running_count {
+    type: running_total
+    sql: ${count} ;;
+  }
 }
