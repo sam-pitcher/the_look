@@ -41,12 +41,6 @@ explore: order_items {
     relationship: many_to_one
   }
 
-  join: users_gender_info {
-    type: left_outer
-    sql_on: ${orders.user_id} = ${users_gender_info.id} ;;
-    relationship: many_to_one
-  }
-
   join: products {
     type: left_outer
     sql_on: ${inventory_items.product_id} = ${products.id} ;;
@@ -57,8 +51,6 @@ explore: order_items {
 #############################
 ##         EXTENDS         ##
 #############################
-
-explore: users_gender_info {}
 
 explore: orders {
   view_name: orders
