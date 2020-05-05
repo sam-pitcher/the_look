@@ -20,14 +20,6 @@ access_grant: groups_that_have_access {
 ##         EXPLORES         ##
 ##############################
 
-explore: users {
-  join: user_data {
-    type: left_outer
-    sql_on: ${user_data.user_id} = ${users.id} ;;
-    relationship: many_to_one
-  }
-}
-
 explore: order_items {
   join: orders {
     type: left_outer
@@ -100,11 +92,12 @@ explore: order_items_with_access_filter {
 ###################################
 ##         DATA TESTS         ##
 ###################################
+
 test: order_data_exists {
   explore_source: order_items {
     column: count {}
     }
-assert: count_greater_than_zero {
-  expression: ${order_items.count} > 0 ;;
-}
+  assert: count_greater_than_zero {
+    expression: ${order_items.count} > 0 ;;
+  }
 }

@@ -33,14 +33,12 @@ view: products {
     {% elsif product_hierachy_parameter._parameter_value == 'category' %}${category}
     {% else %}${department}
     {% endif %}
-
     ;;
   }
 
   dimension: brand {
     type: string
     sql: ${TABLE}.brand ;;
-    html: My brand is: {{value}} and it's cat is {{category._value}} ;;
   }
 
   dimension: brand_logo {

@@ -1,12 +1,13 @@
+include: "base.view"
+
 view: users {
   sql_table_name: demo_db2.users ;;
-  drill_fields: [id]
 
+  extends: [base]
+#   drill_fields: [id]
 
   dimension: id {
-    primary_key: yes
-    type: number
-    sql: ${TABLE}.id ;;
+    label: "My ID"
   }
 
   dimension: dummy {
@@ -18,10 +19,6 @@ view: users {
     sql: ${TABLE}.age ;;
   }
 
-  dimension: city {
-    type: string
-    sql: ${TABLE}.city ;;
-  }
 
   dimension: country {
     type: string
@@ -58,10 +55,10 @@ view: users {
     sql: ${TABLE}.last_name ;;
   }
 
-  dimension: state {
-    type: string
-    sql: ${TABLE}.state ;;
-  }
+#   dimension: state {
+#     type: string
+#     sql: ${TABLE}.state ;;
+#   }
 
   dimension: zip {
     type: zipcode
