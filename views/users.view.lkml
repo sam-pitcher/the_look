@@ -15,7 +15,9 @@ view: users {
     sql: ${TABLE}.created_at ;;
   }
 
-  dimension: id {}
+  dimension: id {
+    primary_key: yes
+  }
 
   dimension: age {
     type: number
