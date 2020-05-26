@@ -62,7 +62,7 @@ view: users {
 
   dimension: gender {
     type: string
-    sql: ${TABLE}.gender ;;
+    sql: CASE WHEN ${TABLE}.gender = 'm' THEN 'Male' ELSE 'Female' END ;;
   }
 
   measure: count {
