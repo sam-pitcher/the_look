@@ -11,6 +11,11 @@ view: base {
     sql: ${TABLE}.city ;;
   }
 
+  dimension: country {
+    type: string
+    sql: ${TABLE}.country ;;
+  }
+
   dimension: state {
     type: string
     sql: ${TABLE}.state ;;

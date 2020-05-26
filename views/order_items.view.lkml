@@ -1,6 +1,10 @@
+include: "base.view"
+
 view: order_items {
   sql_table_name: demo_db2.order_items ;;
   drill_fields: [id]
+
+  extends: [base]
 
   parameter: sale_price_parameter {
     type: unquoted
@@ -15,11 +19,22 @@ view: order_items {
     }
   }
 
-  dimension: id {
-    primary_key: yes
-    type: number
-    sql: ${TABLE}.id ;;
-  }
+#   dimension: id {
+#     primary_key: yes
+#     type: number
+#     sql: ${TABLE}.id ;;
+#   }
+#
+#   dimension: country {
+#     type: string
+#     map_layer_name: countries
+#     sql: ${TABLE}.country ;;
+#   }
+#
+#   dimension: city {
+#     type: string
+#     sql: ${TABLE}.city ;;
+#   }
 
   dimension: inventory_item_id {
     type: number
@@ -72,6 +87,11 @@ view: order_items {
   measure: count {
     type: count
     drill_fields: [id, orders.id, inventory_items.id]
+  }
+
+  measure: order_count {
+    type: count_distinct
+    sql: ${order_id} ;;
   }
 
 

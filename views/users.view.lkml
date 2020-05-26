@@ -1,30 +1,5 @@
-include: "base.view"
-
 view: users {
   sql_table_name: demo_db2.users ;;
-
-  extends: [base]
-#   drill_fields: [id]
-
-  dimension: id {
-    label: "My ID"
-  }
-
-  dimension: dummy {
-    sql: 'dummy' ;;
-  }
-
-  dimension: age {
-    type: number
-    sql: ${TABLE}.age ;;
-  }
-
-
-  dimension: country {
-    type: string
-    map_layer_name: countries
-    sql: ${TABLE}.country ;;
-  }
 
   dimension_group: created {
     type: time
@@ -38,6 +13,34 @@ view: users {
       year
     ]
     sql: ${TABLE}.created_at ;;
+  }
+
+  dimension: id {}
+
+  dimension: age {
+    type: number
+    sql: ${TABLE}.age ;;
+  }
+
+  dimension: country {
+    type: string
+    map_layer_name: countries
+    sql: ${TABLE}.country ;;
+  }
+
+  dimension: city {
+    type: string
+    sql: ${TABLE}.city ;;
+  }
+
+  dimension: state {
+    type: string
+    sql: ${TABLE}.state ;;
+  }
+
+  dimension: zip {
+    type: zipcode
+    sql: ${TABLE}.zip ;;
   }
 
   dimension: email {
@@ -55,31 +58,13 @@ view: users {
     sql: ${TABLE}.last_name ;;
   }
 
-#   dimension: state {
-#     type: string
-#     sql: ${TABLE}.state ;;
-#   }
-
-  dimension: zip {
-    type: zipcode
-    sql: ${TABLE}.zip ;;
+  dimension: gender {
+    type: string
+    sql: ${TABLE}.gender ;;
   }
 
   measure: count {
     type: count
-    drill_fields: [detail*]
   }
 
-  # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-      id,
-      first_name,
-      last_name,
-      events.count,
-      orders.count,
-      pending_orders.count,
-      user_data.count
-    ]
-  }
 }

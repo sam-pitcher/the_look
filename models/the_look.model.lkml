@@ -3,6 +3,7 @@ connection: "thelook"
 # include all the views
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
+# include: ".germany.json"
 
 datagroup: the_look_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -16,9 +17,17 @@ access_grant: groups_that_have_access {
   user_attribute: team
 }
 
+map_layer: germany {
+  file: "/germany.json"
+  format: topojson
+  property_key: "NAME_1"
+}
+
 ##############################
 ##         EXPLORES         ##
 ##############################
+
+explore: users {}
 
 explore: order_items {
   join: orders {
@@ -36,6 +45,11 @@ explore: order_items {
   join: products {
     type: left_outer
     sql_on: ${inventory_items.product_id} = ${products.id} ;;
+    relationship: many_to_one
+  }
+  join: users {
+    type: left_outer
+    sql_on: ${orders.user_id} = ${users.id} ;;
     relationship: many_to_one
   }
 }
