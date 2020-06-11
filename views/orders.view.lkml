@@ -39,7 +39,7 @@ view: orders {
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
-    tags: ["user_id"]
+    tags: ["user_id", "email", "segment_anonymous_id"]
   }
 
   dimension: user_id {
