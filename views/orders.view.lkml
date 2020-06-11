@@ -9,6 +9,7 @@ view: orders {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    tags: ["segment_anonymous_id"]
   }
 
   dimension_group: pop {
