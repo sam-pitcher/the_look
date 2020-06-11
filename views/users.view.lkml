@@ -1,5 +1,9 @@
+include: "base.view"
+
 view: users {
   sql_table_name: demo_db2.users ;;
+
+  extends: [base]
 
   dimension_group: created {
     type: time
@@ -15,29 +19,9 @@ view: users {
     sql: ${TABLE}.created_at ;;
   }
 
-  dimension: id {
-    primary_key: yes
-  }
-
   dimension: age {
     type: number
     sql: ${TABLE}.age ;;
-  }
-
-  dimension: country {
-    type: string
-    map_layer_name: countries
-    sql: ${TABLE}.country ;;
-  }
-
-  dimension: city {
-    type: string
-    sql: ${TABLE}.city ;;
-  }
-
-  dimension: state {
-    type: string
-    sql: ${TABLE}.state ;;
   }
 
   dimension: zip {

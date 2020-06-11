@@ -10,6 +10,8 @@ datagroup: the_look_default_datagroup {
   max_cache_age: "4 hours"
 }
 
+fiscal_month_offset: 3
+
 persist_with: the_look_default_datagroup
 
 access_grant: groups_that_have_access {
@@ -18,7 +20,7 @@ access_grant: groups_that_have_access {
 }
 
 map_layer: germany {
-  file: "/germany.json"
+  file: "../topojson/germany.json"
   format: topojson
   property_key: "NAME_1"
 }
@@ -30,6 +32,7 @@ map_layer: germany {
 explore: users {}
 
 explore: order_items {
+
   join: orders {
     type: left_outer
     sql_on: ${order_items.order_id} = ${orders.id} ;;
