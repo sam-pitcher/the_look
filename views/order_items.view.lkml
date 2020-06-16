@@ -23,6 +23,11 @@ view: order_items {
     sql: ${TABLE}.id ;;
   }
 
+  dimension: sam {
+    type: string
+    sql: 'sam' ;;
+  }
+
   dimension: inventory_item_id {
     type: number
     hidden: yes
