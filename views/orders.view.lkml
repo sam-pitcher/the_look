@@ -1,9 +1,13 @@
-include: "../views_common/period_over_period.view"
+include: "../views_common/period_over_period_mysql.view"
 
 view: orders {
   sql_table_name: demo_db2.orders ;;
 
-  extends: [period_over_period]
+  extends: [period_over_period_mysql]
+
+  dimension_group: pop_no_tz {
+    sql: ${created_date} ;;
+  }
 
   dimension: id {
     primary_key: yes
