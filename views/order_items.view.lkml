@@ -28,6 +28,16 @@ view: order_items {
     sql: 'sam' ;;
   }
 
+    dimension: carlos {
+    type: string
+    sql: 'carlos' ;;
+  }
+
+    dimension: izzy {
+    type: string
+    sql: 'izzy' ;;
+  }
+
   dimension: inventory_item_id {
     type: number
     hidden: yes
