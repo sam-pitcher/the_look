@@ -1,4 +1,4 @@
-view: period_over_period {
+view: period_over_period_bq {
 
   extension: required
 
@@ -43,7 +43,7 @@ view: period_over_period {
     default_value: "Period"
   }
 
-  dimension_group: pop {
+  dimension_group: pop_no_tz {
     hidden: yes
     type: time
     timeframes: [
@@ -95,14 +95,14 @@ view: period_over_period {
     # type: date_raw
     type: date
     sql:
-          {% if compare_to._parameter_value == "Period" %}
-            DATE_SUB(${period_1_start} , INTERVAL ${days_in_period} DAY)
-          {% elsif compare_to._parameter_value == "IsoYear" %}
-            DATE_SUB(${period_1_start}, INTERVAL (DATE_DIFF(DATE(EXTRACT(YEAR FROM ${period_1_start}) - 1 , 12 ,31 ), DATE(EXTRACT(YEAR FROM ${period_1_start}) - 1 , 1 ,1 ), ISOWEEK)) WEEK)
-          {% else %}
-            DATE_SUB(${period_1_start}, INTERVAL 1 {% parameter compare_to %})
-          {% endif %}
-           ;;
+    {% if compare_to._parameter_value == "Period" %}
+      DATE_SUB(${period_1_start} , INTERVAL ${days_in_period} DAY)
+    {% elsif compare_to._parameter_value == "IsoYear" %}
+      DATE_SUB(${period_1_start}, INTERVAL (DATE_DIFF(DATE(EXTRACT(YEAR FROM ${period_1_start}) - 1 , 12 ,31 ), DATE(EXTRACT(YEAR FROM ${period_1_start}) - 1 , 1 ,1 ), ISOWEEK)) WEEK)
+    {% else %}
+      DATE_SUB(${period_1_start}, INTERVAL 1 {% parameter compare_to %})
+    {% endif %}
+     ;;
   }
 
   dimension: period_2_end {
@@ -113,14 +113,14 @@ view: period_over_period {
     type: date
     sql:
 
-          {% if compare_to._parameter_value == "Period" %}
-            DATE_SUB(${period_1_start}, INTERVAL 0 DAY)
-          {% elsif compare_to._parameter_value == "IsoYear" %}
-            DATE_SUB(${period_1_end}, INTERVAL (DATE_DIFF(DATE(EXTRACT(YEAR FROM ${period_1_end}) - 1 , 12 ,31 ), DATE(EXTRACT(YEAR FROM ${period_1_end}) - 1 , 1 ,1 ), ISOWEEK)) WEEK)
-          {% else %}
-            DATE_SUB(${period_1_end}, INTERVAL 1 {% parameter compare_to %})
-          {% endif %}
-       ;;
+    {% if compare_to._parameter_value == "Period" %}
+      DATE_SUB(${period_1_start}, INTERVAL 0 DAY)
+    {% elsif compare_to._parameter_value == "IsoYear" %}
+      DATE_SUB(${period_1_end}, INTERVAL (DATE_DIFF(DATE(EXTRACT(YEAR FROM ${period_1_end}) - 1 , 12 ,31 ), DATE(EXTRACT(YEAR FROM ${period_1_end}) - 1 , 1 ,1 ), ISOWEEK)) WEEK)
+    {% else %}
+      DATE_SUB(${period_1_end}, INTERVAL 1 {% parameter compare_to %})
+    {% endif %}
+ ;;
   }
 
   dimension: day_in_period {
@@ -129,19 +129,19 @@ view: period_over_period {
     description: "Gives the number of days since the start of each periods. Use this to align the event dates onto the same axis, the axes will read 1,2,3, etc."
     type: number
     sql:
-          {% if current_date_range._is_filtered %}
-            CASE
+    {% if current_date_range._is_filtered %}
+      CASE
 
-              WHEN ${pop_date} between ${period_1_start} and ${period_1_end}
-              THEN DATEDIFF(${pop_date}, ${period_1_start}, DAY )
+        WHEN ${pop_no_tz_date} between ${period_1_start} and ${period_1_end}
+        THEN DATE_DIFF(${pop_no_tz_date}, ${period_1_start}, DAY )
 
-              WHEN ${pop_date} between ${period_2_start} and ${period_2_end}
-              THEN DATEDIFF(${pop_date}, ${period_2_start}, DAY )
+        WHEN ${pop_no_tz_date} between ${period_2_start} and ${period_2_end}
+        THEN DATE_DIFF(${pop_no_tz_date}, ${period_2_start}, DAY )
 
-            END
+      END
 
-          {% else %} NULL
-          {% endif %} ;;
+    {% else %} NULL
+    {% endif %} ;;
   }
 
   ##########################
@@ -155,9 +155,9 @@ view: period_over_period {
   #   sql:
   #     {% if current_date_range._is_filtered %}
   #       CASE
-  #         WHEN ${pop_date} between CAST(${period_1_start} AS TIMESTAMP) and CAST(${period_1_end} AS TIMESTAMP)
+  #         WHEN ${pop_no_tz_raw} between CAST(${period_1_start} AS TIMESTAMP) and CAST(${period_1_end} AS TIMESTAMP)
   #         THEN 2
-  #         WHEN ${pop_date} between ${period_2_start} and ${period_2_end}
+  #         WHEN ${pop_no_tz_raw} between ${period_2_start} and ${period_2_end}
   #         THEN 1
   #       END
   #     {% else %}
@@ -178,9 +178,9 @@ view: period_over_period {
     sql:
        {% if current_date_range._is_filtered %}
          CASE
-           WHEN ${pop_date} between ${period_1_start} and ${period_1_end}
+           WHEN ${pop_no_tz_date} between ${period_1_start} and ${period_1_end}
            THEN 'This {% parameter compare_to %}'
-           WHEN ${pop_date} between ${period_2_start} and ${period_2_end}
+           WHEN ${pop_no_tz_date} between ${period_2_start} and ${period_2_end}
            THEN 'Last {% parameter compare_to %}'
          END
        {% else %}
@@ -188,15 +188,15 @@ view: period_over_period {
        {% endif %}
        ;;
     # order_by_field: period_order
-  }
+    }
 
-  dimension_group: date_in_period {
-    view_label: "-- Period over Period"
-    description: "Use this as your date dimension when comparing periods. Aligns the previous periods onto the current period"
-    label: "Current Period"
-    type: time
-    sql: DATE_ADD(${period_1_start}, INTERVAL (${day_in_period}) DAY) ;;
-    timeframes: [date, week, month, quarter, year]
-  }
+    dimension_group: date_in_period {
+      view_label: "-- Period over Period"
+      description: "Use this as your date dimension when comparing periods. Aligns the previous periods onto the current period"
+      label: "Current Period"
+      type: time
+      sql: DATE_ADD(${period_1_start}, INTERVAL (${day_in_period}) DAY) ;;
+      timeframes: [date, week, month, quarter, year]
+    }
 
-}
+  }
