@@ -33,11 +33,6 @@ explore: users {}
 
 explore: order_items {
 
-  access_filter: {
-    user_attribute: company
-    field: users.country
-  }
-
   join: orders {
     type: left_outer
     sql_on: ${order_items.order_id} = ${orders.id} ;;
