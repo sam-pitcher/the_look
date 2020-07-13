@@ -3,11 +3,14 @@ connection: "thelook"
 # include all the views
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
+# include: ".germany.json"
 
 datagroup: the_look_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "4 hours"
 }
+
+fiscal_month_offset: 3
 
 persist_with: the_look_default_datagroup
 
@@ -16,17 +19,17 @@ access_grant: groups_that_have_access {
   user_attribute: team
 }
 
+map_layer: germany {
+  file: "../topojson/germany.json"
+  format: topojson
+  property_key: "NAME_1"
+}
+
 ##############################
 ##         EXPLORES         ##
 ##############################
 
-explore: users {
-  join: user_data {
-    type: left_outer
-    sql_on: ${user_data.user_id} = ${users.id} ;;
-    relationship: many_to_one
-  }
-}
+explore: users {}
 
 explore: order_items {
   from: order_items_order_dep
@@ -112,11 +115,12 @@ explore: order_items_with_access_filter {
 ###################################
 ##         DATA TESTS         ##
 ###################################
+
 test: order_data_exists {
   explore_source: order_items {
     column: count {}
     }
-assert: count_greater_than_zero {
-  expression: ${order_items.count} > 0 ;;
-}
+  assert: count_greater_than_zero {
+    expression: ${order_items.count} > 0 ;;
+  }
 }

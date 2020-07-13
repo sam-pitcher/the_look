@@ -33,7 +33,6 @@ view: products {
     {% elsif product_hierachy_parameter._parameter_value == 'category' %}${category}
     {% else %}${department}
     {% endif %}
-
     ;;
   }
 

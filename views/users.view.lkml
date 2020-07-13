@@ -1,7 +1,7 @@
+include: "base.view"
+
 view: users {
   sql_table_name: demo_db2.users ;;
-  drill_fields: [id]
-
 
   dimension: id {
     primary_key: yes
@@ -82,28 +82,13 @@ view: users {
     sql: ${TABLE}.last_name ;;
   }
 
-# Year -> Month -> Week -> Date -> Hour
-#   Country -> State - City -> Zip
-
-
-
-
+  dimension: gender {
+    type: string
+    sql: CASE WHEN ${TABLE}.gender = 'm' THEN 'Male' ELSE 'Female' END ;;
+  }
   measure: count {
     type: count
-#     drill_fields: [id, first_name, last_name, city, state, country]
-    drill_fields: [detail*]
+    drill_fields: [id, first_name, last_name, city, state, country]
   }
 
-  # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-      id,
-      first_name,
-      last_name,
-      events.count,
-      orders.count,
-      pending_orders.count,
-      user_data.count
-    ]
-  }
 }

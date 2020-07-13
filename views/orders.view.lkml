@@ -1,11 +1,23 @@
+include: "../views_common/period_over_period_mysql.view"
+
 view: orders {
   sql_table_name: demo_db2.orders ;;
-  drill_fields: [id]
+
+  extends: [period_over_period_mysql]
+
+  dimension_group: pop_no_tz {
+    sql: ${created_date} ;;
+  }
 
   dimension: id {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    tags: ["segment_anonymous_id"]
+  }
+
+  dimension_group: pop {
+    sql: ${TABLE}.created_at ;;
   }
 
   dimension_group: created {
@@ -18,22 +30,22 @@ view: orders {
       month,
       month_name,
       quarter,
-      year
+      year,
+      fiscal_year
     ]
     sql: ${TABLE}.created_at ;;
+  }
+
+  filter: status_filter {
+    required_access_grants: [groups_that_have_access]
+    sql: {% condition status_filter %}${status}{% endcondition %} ;;
+    suggest_dimension: orders.status
   }
 
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
-    html: {% if value == 'pending' %}
-    <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
-    {% elsif value == 'complete' %}
-    <p style="color: black; background-color: lightgreen; font-size:100%; text-align:center">{{ rendered_value }}</p>
-    {% else %}
-    <p style="color: black; background-color: orange; font-size:100%; text-align:center">{{ rendered_value }}</p>
-    {% endif %}
-    ;;
+    tags: ["user_id", "email", "segment_anonymous_id"]
   }
 
   dimension: user_id {

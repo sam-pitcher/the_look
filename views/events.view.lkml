@@ -38,13 +38,6 @@ view: events {
     sql: ${TABLE}.value ;;
   }
 
-  dimension: do_one {
-  type: string
-  sql: 'Do One' ;;
-  html: <span style="font-size:24pt;">{{rendered_value}}</span> ;;
-
-  }
-
   measure: count {
     type: count
     drill_fields: [id, users.id, users.first_name, users.last_name]
