@@ -7,6 +7,15 @@ view: users {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    link: {
+      url: "/dashboards/20?User ID={{ value }}"
+      label: "Look up User ID #{{value}}"
+    }
+
+#     link: {
+#       url: "/dashboards/4?User%20ID={{value}}" ## Liquid
+#       label: "Look up user {{value}}"
+#     }
   }
 
   dimension: dummy {
@@ -18,15 +27,30 @@ view: users {
     sql: ${TABLE}.age ;;
   }
 
-  dimension: city {
-    type: string
-    sql: ${TABLE}.city ;;
-  }
 
   dimension: country {
     type: string
     map_layer_name: countries
     sql: ${TABLE}.country ;;
+    drill_fields: [state]
+  }
+
+  dimension: state {
+    type: string
+    sql: ${TABLE}.state ;;
+    drill_fields: [city]
+  }
+
+
+  dimension: city {
+    type: string
+    sql: ${TABLE}.city ;;
+    drill_fields: [zip]
+  }
+
+  dimension: zip {
+    type: zipcode
+    sql: ${TABLE}.zip ;;
   }
 
   dimension_group: created {
@@ -58,18 +82,15 @@ view: users {
     sql: ${TABLE}.last_name ;;
   }
 
-  dimension: state {
-    type: string
-    sql: ${TABLE}.state ;;
-  }
+# Year -> Month -> Week -> Date -> Hour
+#   Country -> State - City -> Zip
 
-  dimension: zip {
-    type: zipcode
-    sql: ${TABLE}.zip ;;
-  }
+
+
 
   measure: count {
     type: count
+#     drill_fields: [id, first_name, last_name, city, state, country]
     drill_fields: [detail*]
   }
 

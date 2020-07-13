@@ -29,6 +29,11 @@ explore: users {
 }
 
 explore: order_items {
+  from: order_items_order_dep
+#   view_name: something_else
+  # explore name = order_items
+  # base_table = order_items_with_inventory_dependency
+  # name to use in fields = order_items   # <--- causes problems
   join: orders {
     type: left_outer
     sql_on: ${order_items.order_id} = ${orders.id} ;;
@@ -71,6 +76,7 @@ explore: orders_extended {
   extends: [orders]
 
   join: order_items {
+    from: order_items_order_dep
     type: left_outer
     sql_on: ${order_items.order_id} = ${orders.id} ;;
     relationship: many_to_one
@@ -94,13 +100,13 @@ explore: orders_extended {
 ###################################
 
 explore: order_items_with_access_filter {
-  extends: [order_items]
+#   extends: [order_items]
   from: order_items
-  view_name: order_items
-  access_filter: {
-    user_attribute: brand
-    field: products.brand
-  }
+#   view_name: order_items
+#   access_filter: {
+#     user_attribute: brand
+#     field: products.brand
+#   }
 }
 
 ###################################
