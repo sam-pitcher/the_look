@@ -35,6 +35,11 @@ view: orders {
     sql: ${TABLE}.created_at ;;
   }
 
+  dimension: use_date {
+    type: number
+    sql: DATEDIFF(DATE({% date_start created_date %}), DATE({% date_end created_date %} INTERVAL day) ;;
+  }
+
   filter: status_filter {
     required_access_grants: [groups_that_have_access]
     sql: {% condition status_filter %}${status}{% endcondition %} ;;

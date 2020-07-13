@@ -14,6 +14,11 @@ fiscal_month_offset: 3
 
 persist_with: the_look_default_datagroup
 
+access_grant: user_is_admin {
+  user_attribute: is_admin
+  allowed_values: ["Yes"]
+}
+
 access_grant: groups_that_have_access {
   allowed_values: ["finance"]
   user_attribute: team
@@ -29,9 +34,22 @@ map_layer: germany {
 ##         EXPLORES         ##
 ##############################
 
-explore: users {}
+explore: users {
+  required_access_grants: [user_is_admin]
+}
+
+
+
+
 
 explore: order_items {
+
+
+
+  access_filter: {
+    user_attribute: country
+    field: users.country
+  }
 
   join: orders {
     type: left_outer

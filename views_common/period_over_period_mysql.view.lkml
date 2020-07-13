@@ -112,7 +112,7 @@ view: period_over_period_mysql {
     sql:
 
     {% if compare_to._parameter_value == "Period" %}
-      DATE_SUB(${period_1_start}, INTERVAL 0 DAY)
+      ${period_1_start}
     {% elsif compare_to._parameter_value == "IsoYear" %}
       DATE_SUB(${period_1_end}, INTERVAL (DATE_DIFF(DATE(EXTRACT(YEAR FROM ${period_1_end}) - 1 , 12 ,31 ), DATE(EXTRACT(YEAR FROM ${period_1_end}) - 1 , 1 ,1 ), ISOWEEK)) WEEK)
     {% else %}
