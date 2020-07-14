@@ -39,6 +39,11 @@ view: products {
   dimension: brand {
     type: string
     sql: ${TABLE}.brand ;;
+    link: {
+      url: "https://www.google.com/search?q={{value}}"
+      label: "Google Search for {{value}}"
+    }
+#     html: My brand is: {{value}} and it's cat is {{category._value}} ;;
   }
 
   dimension: brand_logo {

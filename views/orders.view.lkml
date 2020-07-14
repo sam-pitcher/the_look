@@ -28,6 +28,7 @@ view: orders {
       date,
       week,
       month,
+      month_name,
       quarter,
       year,
       fiscal_year
@@ -61,6 +62,13 @@ view: orders {
   measure: count {
     type: count
     drill_fields: [id, users.id, users.first_name, users.last_name, order_items.count]
+  }
+
+  measure: count_previous {
+    type: percent_of_previous
+    sql: ${count} ;;
+#     html: {% if value >= 1 %}<p style="color:green">{{rendered_value}}</p>
+#     {% else %}<p style="color:red">{{rendered_value}}</p> {% endif %} ;;
   }
 
 

@@ -2,7 +2,7 @@ include: "base.view"
 
 view: order_items {
   sql_table_name: demo_db2.order_items ;;
-  drill_fields: [id]
+#   drill_fields: [id]
 
   parameter: sale_price_parameter {
     type: unquoted
@@ -16,7 +16,6 @@ view: order_items {
       value: "avg"
     }
   }
-
   dimension: id {
     primary_key: yes
     type: number
@@ -31,7 +30,7 @@ view: order_items {
 
   dimension: order_id {
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}.order_id ;;
   }
 
@@ -48,6 +47,7 @@ view: order_items {
     ]
     sql: ${TABLE}.returned_at ;;
   }
+
 
   dimension: sale_price {
     type: number
@@ -133,7 +133,16 @@ view: order_items {
 
   measure: count {
     type: count
-    drill_fields: [id, orders.id, inventory_items.id]
+    drill_fields: [orders.status, count_hidden_drill]
+#     drill_fields: [id, orders.id, inventory_items.id]
+  }
+
+  measure: count_hidden_drill {
+    label: "Count"
+    hidden: yes
+    type: count
+    drill_fields: [id]
+#     drill_fields: [id, orders.id, inventory_items.id]
   }
 
   measure: order_count {
@@ -143,3 +152,53 @@ view: order_items {
 
 
 }
+
+view: order_items_with_inventory_dependency {
+  extends: [order_items] ### Inherit all the code from order_items
+
+  dimension: order_id {
+    label: "New label in different context"
+    hidden: yes
+  }
+
+  dimension: order_id_derived_dimension {
+    type: number
+    sql: ${order_id} + 1 ;;
+  }
+}
+
+view: order_items_order_dep {
+  extends: [order_items]
+
+  dimension_group: created_to_returned {
+    type: duration
+    intervals: [minute, hour, day, week]
+    sql_start: ${orders.created_raw} ;;
+    sql_end:  ${returned_raw} ;;
+  }
+
+  parameter: choose_interval_type_for_average {
+    default_value: "Minute"
+    allowed_value: {value:"Week"}
+    allowed_value: {value:"Day"}
+    allowed_value: {value:"Hour"}
+    allowed_value: {value:"Minute"}
+    type: unquoted
+  }
+
+  measure: average_interval_created_to_returned {
+    description: "Use this with the filter 'choose interval type'"
+    type: average
+    value_format_name: decimal_1
+    sql: {% if choose_interval_type_for_average._parameter_value == 'Week' %}
+          ${weeks_created_to_returned}
+          {% elsif choose_interval_type_for_average._parameter_value == 'Day' %}
+          ${days_created_to_returned}
+          {% elsif choose_interval_type_for_average._parameter_value == 'Hour' %}
+          ${hours_created_to_returned}
+          {% elsif choose_interval_type_for_average._parameter_value == 'Minute' %}
+          ${minutes_created_to_returned}
+          {% else %} NULL
+          {% endif %} ;;
+  }
+  }
