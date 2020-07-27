@@ -43,6 +43,7 @@ explore: users {
 
 
 explore: order_items {
+  sql_always_where: ${products.department} = 'Men' ;;
 
   join: orders {
     type: left_outer

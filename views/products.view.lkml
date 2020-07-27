@@ -1,6 +1,6 @@
 view: products {
   sql_table_name: demo_db2.products ;;
-  drill_fields: [id]
+#   drill_fields: [id]
 
   parameter: product_hierachy_parameter {
     type: unquoted
@@ -24,6 +24,7 @@ view: products {
     hidden: yes
     type: number
     sql: ${TABLE}.id ;;
+    can_filter: no
   }
 
   dimension: product_hierachy {
@@ -55,9 +56,12 @@ view: products {
   dimension: category {
     type: string
     sql: ${TABLE}.category ;;
+    drill_fields: [id, department]
   }
 
   dimension: department {
+    suggestable: yes
+#     bypass_suggest_restrictions: yes
     type: string
     sql: ${TABLE}.department ;;
   }
@@ -65,11 +69,32 @@ view: products {
   dimension: item_name {
     type: string
     sql: ${TABLE}.item_name ;;
+#     can_filter: no
   }
+
+  dimension: item_name_liquid {
+    type: string
+    sql: ${TABLE}.item_name ;;
+    html:
+    {% assign my_array = value | split: ' ' %}
+    {% for item in my_array %}
+    {{ item | capitalize }}
+    {% endfor %}
+    ;;
+  }
+#   ['Kasper', 'Eternal']
 
   dimension: rank {
     type: number
     sql: ${TABLE}.rank ;;
+  }
+
+  dimension: rank_liquid {
+    type: number
+    sql: ${TABLE}.rank ;;
+    html:
+    {% assign mod_value = value | modulo: 2 %}
+    {% if mod_value == 1 %}Odd{% else %}Even{% endif %};;
   }
 
   dimension: retail_price {
